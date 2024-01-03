@@ -23,3 +23,4 @@ class CausalConv1d(nn.Module):
             return conv_out[:,:,:-1]
         else:
             return conv_out
+
