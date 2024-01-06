@@ -1,6 +1,6 @@
 # PyBlock
 
-A collection of implementations all kinds of NN blocks in pytorch.
+A collection of implementations all kinds of NN in pytorch.
 
 Files Tree:
 .
