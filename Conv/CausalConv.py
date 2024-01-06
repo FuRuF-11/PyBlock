@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as function
+import torch.nn.functional as F
 
 
 class CausalConv1d(nn.Module):
