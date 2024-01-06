@@ -1,8 +1,8 @@
 # PyBlock
 
-A collection of implementations all kinds of NNs and NN blocks in pytorch.
+A collection of the implementations all kinds of NNs(which might become the block of other projects) in pytorch.
 
-The things I cannot build.I donot understand. 
+These things I cannot build.I donot understand. 
 
 Files Tree:
 .
