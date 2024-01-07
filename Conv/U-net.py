@@ -56,5 +56,13 @@ class U_net(nn.Module):
 
     def forward(self,X):
         # encoder
-        
+        e1=self.conv1(X)
+        e2=self.maxPooling()
+        e2=self.conv2(X)
+        e3=self.conv3(X)
+        e4=self.conv4(X)
+        e5=self.conv5(X)
+
+        # decoder
+
         return X
