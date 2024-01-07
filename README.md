@@ -6,11 +6,12 @@ These things I cannot build.I donot understand.
 
 Files Tree:
 .
-|-- ClassicNN
-|   `-- U-net.py
-|-- Conv
-|   `-- CausalConv.py
+|-- Convolution
+|   |-- CausalConv.py
+|   |-- U-net.py
+|   `-- WaveNet.py
 |-- README.md
+|-- Recurrent
+|   `-- NerualTuringMachine.py
 `-- Transformer
     `-- encoder.py
-
