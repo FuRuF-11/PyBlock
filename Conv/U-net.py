@@ -57,12 +57,32 @@ class U_net(nn.Module):
     def forward(self,X):
         # encoder
         e1=self.conv1(X)
-        e2=self.maxPooling()
-        e2=self.conv2(X)
-        e3=self.conv3(X)
-        e4=self.conv4(X)
-        e5=self.conv5(X)
+        e2=self.maxPooling(e1)
+        e2=self.conv2(e2)
+        e3=self.maxPooling(e2)
+        e3=self.conv3(e3)
+        e4=self.maxPooling(e3)
+        e4=self.conv4(e4)
+        e5=self.maxPooling(e4)
+        e5=self.conv5(e5)
 
         # decoder
+        d1 = self.up5(e5)
+        d1 = torch.concat((e4,d1),dim=1)
+        d1 = self.conv6(d1)
+        
+        d2 = self.up5(d1)
+        d2 = torch.concat((e3,d2),dim=1)
+        d2 = self.conv7(d2)
+        
+        d3 = self.up5(d2)
+        d3 = torch.concat((e2,d3),dim=1)
+        d3 = self.conv8(d3)
+        
+        d4 = self.up5(d3)
+        d4 = torch.concat((e1,d4),dim=1)
+        d4 = self.conv9(d4)
+        # output
+        d5 = self.conv10(d4)
 
-        return X
+        return d5
