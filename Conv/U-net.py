@@ -35,7 +35,7 @@ class up_conv(nn.Module):
 class U_net(nn.Module):
     def __init__(self,inChannal,outChannal,C_size=64,kernel_size=3) -> None:
         super(U_net,self).__init__()
-        a=64
+        a=C_size
         self.maxPooling=nn.MaxPool2d()
         self.conv1=ConvBlock(inChannal,a,kernel_size)
         self.conv2=ConvBlock(a,a*2,kernel_size)
@@ -67,19 +67,19 @@ class U_net(nn.Module):
         e5=self.conv5(e5)
 
         # decoder
-        d1 = self.up5(e5)
+        d1 = self.up1(e5)
         d1 = torch.concat((e4,d1),dim=1)
         d1 = self.conv6(d1)
         
-        d2 = self.up5(d1)
+        d2 = self.up2(d1)
         d2 = torch.concat((e3,d2),dim=1)
         d2 = self.conv7(d2)
         
-        d3 = self.up5(d2)
+        d3 = self.up3(d2)
         d3 = torch.concat((e2,d3),dim=1)
         d3 = self.conv8(d3)
         
-        d4 = self.up5(d3)
+        d4 = self.up4(d3)
         d4 = torch.concat((e1,d4),dim=1)
         d4 = self.conv9(d4)
         # output
