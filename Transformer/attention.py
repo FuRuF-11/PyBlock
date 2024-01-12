@@ -40,8 +40,9 @@ class MultiHeadAttention(nn.Module):
 
         # attention_sorce.size()=(batch_size,self.head,sentence_length,self.d_head)
         attention_sorce=attention(q,k,v,mask,self.dropout)
-        concant_attention_sorce=attention_sorce.transpose(1,2).contiguous().view(batch_size, -1, self.d_model)
-        output=self.output(concant_attention_sorce)
+        # concat_attention_sorce.size()=(batch_size,sentence_length,self.head,self.d_head)
+        concat_attention_sorce=attention_sorce.transpose(1,2).contiguous().view(batch_size, -1, self.d_model)
+        output=self.output(concat_attention_sorce)
         return output
     
 
