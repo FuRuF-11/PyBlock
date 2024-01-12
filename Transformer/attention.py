@@ -41,8 +41,8 @@ class MultiHeadAttention(nn.Module):
         # attention_sorce.size()=(batch_size,self.head,sentence_length,self.d_head)
         attention_sorce=attention(q,k,v,mask,self.dropout)
         # concat_attention_sorce.size()=(batch_size,sentence_length,self.head,self.d_head)
+        # view() will not change the order of numbers in memory,so we can use it to concat different heads.
+        # [[a,b],[c,d]] --->[[a,b,c,d]]
         concat_attention_sorce=attention_sorce.transpose(1,2).contiguous().view(batch_size, -1, self.d_model)
         output=self.output(concat_attention_sorce)
         return output
-    
-
