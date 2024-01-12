@@ -9,18 +9,23 @@ def attention(q,k,v,mask=False):
     exp=None
     return exp 
 
-class MultiHeadSelfAttention(nn.Module):
+class MultiHeadAttention(nn.Module):
     def __init__(self,d_model,head,dropout=0.1) -> None:
-        super(MultiHeadSelfAttention,self).__init__()
+        super(MultiHeadAttention,self).__init__()
         self.d_head=d_model//head
         self.d_model=d_model
         self.K=nn.Linear()
         self.Q=nn.Linear()
         self.V=nn.Linear()
+        self.output=nn.Linear()
+        self.dropout=dropout
 
-        self.dropout=nn.Dropout(dropout)
-
-    def forward(self,X):
-        return X
+    def forward(self,q,k,v,mask=None):
+        '''
+        mask is a matrix you need to buiild by yourself
+        if you want  to use self attention ,just let q=k=v=YourInput
+        '''
+        output=self.output()
+        return output
     
 
