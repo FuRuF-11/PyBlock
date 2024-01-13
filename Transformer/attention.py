@@ -46,3 +46,13 @@ class MultiHeadAttention(nn.Module):
         concat_attention_sorce=attention_sorce.transpose(1,2).contiguous().view(batch_size, -1, self.d_model)
         output=self.output(concat_attention_sorce)
         return output
+
+
+class CasualAttention(nn.Module):
+    ''' 
+    an implmentation of masked multi-head self attention 
+    which is often used in NLP models like GPT.
+    '''
+    def __init__(self,d_model,head,dropout=0.1) -> None:
+        super(CasualAttention).__init__()
+        
