@@ -2,19 +2,23 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+'''
+we only implemet the multi-head version attention ,because the single-head is just a speical version of multi-head
+'''
+
 def attention(q,k,v,mask=None,dropout=None):
     '''
     compute attention score 
     '''
     d_k=k.size(3)
     # sorce.size()=(batch_size,self.head,sentence_length,sentence_length)
-    sorce=torch.matmul(q,k.transpose(-2,-1))/torch.sqrt(torch.tensor(d_k).float())
+    score=torch.matmul(q,k.transpose(-2,-1))/torch.sqrt(torch.tensor(d_k).float())
     if(mask!=None):
-        sorce=sorce.masked_fill(mask==0,float('-inf'))
-    att_sorce=F.softmax(sorce,dim=-1)
+        score=score.masked_fill(mask==0,float('-inf'))
+    att_score=F.softmax(score,dim=-1)
     if(dropout != None):
-        att_sorce=dropout(att_sorce)
-    exp=torch.matmul(att_sorce,v)
+        att_score=dropout(att_score)
+    exp=torch.matmul(att_score,v)
     return exp 
 
 class MultiHeadAttention(nn.Module):
@@ -41,13 +45,13 @@ class MultiHeadAttention(nn.Module):
         k=self.k(k).view(batch_size,-1,self.head,self.d_head).transpose(1,2)
         v=self.v(v).view(batch_size,-1,self.head,self.d_head).transpose(1,2)
 
-        # attention_sorce.size()=(batch_size,self.head,sentence_length,self.d_head)
-        attention_sorce=attention(q,k,v,mask,self.dropout)
+        # attention_score.size()=(batch_size,self.head,sentence_length,self.d_head)
+        attention_score=attention(q,k,v,mask,self.dropout)
         # concat_attention_sorce.size()=(batch_size,sentence_length,self.d_model)
         # view() will not change the order of numbers in memory,so we can use it to concat different heads.
         # [[a,b],[c,d]] --->[[a,b,c,d]]
-        concat_attention_sorce=attention_sorce.transpose(1,2).contiguous().view(batch_size, -1, self.d_model)
-        output=self.output(concat_attention_sorce)
+        concat_attention_score=attention_score.transpose(1,2).contiguous().view(batch_size, -1, self.d_model)
+        output=self.output(concat_attention_score)
         return output
 
 class SelfAttention(nn.Module):
