@@ -3,11 +3,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 def attention(q,k,v,mask=None,dropout=None):
+    '''
+    compute attention score 
+    '''
     d_k=k.size(3)
     # sorce.size()=(batch_size,self.head,sentence_length,sentence_length)
     sorce=torch.matmul(q,k.transpose(-2,-1))/torch.sqrt(torch.tensor(d_k).float())
     if(mask!=None):
-        sorce=sorce.masked_fill(mask==0,-1e9)
+        sorce=sorce.masked_fill(mask==0,float('-inf'))
     att_sorce=F.softmax(sorce,dim=-1)
     if(dropout != None):
         att_sorce=dropout(att_sorce)
@@ -47,6 +50,18 @@ class MultiHeadAttention(nn.Module):
         output=self.output(concat_attention_sorce)
         return output
 
+class SelfAttention(nn.Module):
+    '''
+    self attention version multi-head attention
+    '''
+    def __init__(self,d_model,head,dropout=0.1) -> None:
+        super(SelfAttention,self).__init__()
+        self.MultiHeadAtt=MultiHeadAttention(d_model=d_model,head=head,dropout=dropout)
+
+    def forward(self,X,mask=None):
+        output=self.MultiHeadAtt(X,X,X,mask)
+        return output
+
 
 class CasualAttention(nn.Module):
     ''' 
@@ -56,13 +71,11 @@ class CasualAttention(nn.Module):
     '''
     def __init__(self,d_model,head,sentence_length,dropout=0.1) -> None:
         super(CasualAttention).__init__()
-        self.sentence_length=sentence_length
         self.register_buffer(\
-            'mask',torch.tril(torch.ones(sentence_length,sentence_length)).
+            'mask',torch.tril(torch.ones(sentence_length,sentence_length)).\
             view(1,1,sentence_length,sentence_length))
-        self.MultiHeadAtt=MultiHeadAttention(d_model=d_model,head=head,dropout=dropout)
+        self.SelfAttention=SelfAttention(d_model=d_model,head=head,dropout=dropout)
 
     def forward(self,X):
-        # in self attention q=k=v=x 
-        output=self.MultiHeadAtt(X,X,X,self.mask)   
+        output=self.SelfAttention(X,self.mask)
         return output
