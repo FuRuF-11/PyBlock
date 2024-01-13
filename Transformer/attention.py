@@ -4,9 +4,9 @@ import torch.nn.functional as F
 
 def attention(q,k,v,mask=None,dropout=None):
     d_k=k.size(3)
+    # sorce.size()=(batch_size,self.head,sentence_length,sentence_length)
     sorce=torch.matmul(q,k.transpose(-2,-1))/torch.sqrt(torch.tensor(d_k).float())
     if(mask!=None):
-        mask=mask.unsqueeze(1)
         sorce=sorce.masked_fill(mask==0,-1e9)
     att_sorce=F.softmax(sorce,dim=-1)
     if(dropout != None):
@@ -40,7 +40,7 @@ class MultiHeadAttention(nn.Module):
 
         # attention_sorce.size()=(batch_size,self.head,sentence_length,self.d_head)
         attention_sorce=attention(q,k,v,mask,self.dropout)
-        # concat_attention_sorce.size()=(batch_size,sentence_length,self.head,self.d_head)
+        # concat_attention_sorce.size()=(batch_size,sentence_length,self.d_model)
         # view() will not change the order of numbers in memory,so we can use it to concat different heads.
         # [[a,b],[c,d]] --->[[a,b,c,d]]
         concat_attention_sorce=attention_sorce.transpose(1,2).contiguous().view(batch_size, -1, self.d_model)
@@ -52,7 +52,17 @@ class CasualAttention(nn.Module):
     ''' 
     an implmentation of masked multi-head self attention 
     which is often used in NLP models like GPT.
+    the length and width of mask matrix equal to the length of sentence 
     '''
-    def __init__(self,d_model,head,dropout=0.1) -> None:
+    def __init__(self,d_model,head,sentence_length,dropout=0.1) -> None:
         super(CasualAttention).__init__()
-        
+        self.sentence_length=sentence_length
+        self.register_buffer(\
+            'mask',torch.tril(torch.ones(sentence_length,sentence_length)).
+            view(1,1,sentence_length,sentence_length))
+        self.MultiHeadAtt=MultiHeadAttention(d_model=d_model,head=head,dropout=dropout)
+
+    def forward(self,X):
+        # in self attention q=k=v=x 
+        output=self.MultiHeadAtt(X,X,X,self.mask)   
+        return output
