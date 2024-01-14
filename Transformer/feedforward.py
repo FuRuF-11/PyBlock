@@ -8,7 +8,9 @@ import math
 class NewGELU(nn.Module):
     '''
     The activation funcation of GPT and Bert
-    Reference: Gaussian Error Linear Units (GELU) paper: https://arxiv.org/abs/1606.08415
+    Reference: 
+    Gaussian Error Linear Units (GELU) paper: https://arxiv.org/abs/1606.08415
+    On the GELU Activation Function: https://alaaalatif.github.io/2019-04-11-gelu/
     '''
     def __init__(self) -> None:
         super(NewGELU,self).__init__()
