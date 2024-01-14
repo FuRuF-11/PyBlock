@@ -14,13 +14,19 @@ class NewGELU(nn.Module):
     '''
     def __init__(self) -> None:
         super(NewGELU,self).__init__()
-    
     def forward(self,X):
         return 0.5*X*(1.0+torch.tanh(math.sqrt(2/math.pi)*(X+0.044715*X**3)))
 
 
 class MLP(nn.Module):
-    def __init__(self,in_channal,out_channal,dropout=0.1) -> None:
+    def __init__(self,in_feature,hidden=3,dropout=0.1) -> None:
         super(MLP,self).__init__()
+        self.MLP=nn.Sequential(
+            nn.LayerNorm(in_feature),
+            nn.Linear(in_feature,hidden*in_feature),
+            NewGELU(),
+            nn.Linear(hidden*in_feature,in_feature)
+        )
     def forward(self,X):
+        X=self.MLP(X)
         return X
