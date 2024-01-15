@@ -9,11 +9,21 @@ the postion encoder decede the max length of input sequence
 '''
 
 class cosinPosition(nn.Module):
-    def __init__(self) -> None:
+    def __init__(self,d_model,max_length=2000,dropout=0.1) -> None:
         super(cosinPosition,self).__init__()
+        self.d_model=d_model
+        self.dropout=nn.Dropout(dropout)
 
 
 
     def forward(self,X):
         return X
         
+
+class RnnPosition(nn.Module):
+    '''rnn can replace the cos\sin position encoder to encode the position information.'''
+    def __init__(self) -> None:
+        super(RnnPosition,self).__init__()
+        
+    def forward(self,X):
+        return X
