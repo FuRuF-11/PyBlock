@@ -5,8 +5,15 @@ import math
 
 '''
 all kinds of position encoder 
+the postion encoder decede the max length of input sequence 
 '''
 
-class cosinPosition():
+class cosinPosition(nn.Module):
     def __init__(self) -> None:
-        pass
+        super(cosinPosition,self).__init__()
+
+
+
+    def forward(self,X):
+        return X
+        
