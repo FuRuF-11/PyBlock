@@ -21,9 +21,14 @@ class CosinPosition(nn.Module):
         position[:,1::2]=torch.cos(t*div_term)
         # for broadcast
         position.view(1,max_length,d_model)
+        self.register_buffer("position",position)
 
     @torch.no_grad()
     def forward(self,X):
+        sentence_length=X.size(1)
+        X=X*math.sqrt(self.d_model)
+        X=X+self.position[:,:sentence_length]
+        X=self.dropout(X)
         return X
         
 
