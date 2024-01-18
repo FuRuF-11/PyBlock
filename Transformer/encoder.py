@@ -6,7 +6,7 @@ from feedforward import MLP
 from position import CosinPosition
 
 class EncoderBlock(nn.Module):
-    def __init__(self,d_model,sentence_length,head=8,dropout=0.1):
+    def __init__(self,d_model,head=8,dropout=0.1):
         super(EncoderBlock,self).__init__
         self.Norm1=nn.LayerNorm(d_model)
         self.Norm2=nn.LayerNorm(d_model)
