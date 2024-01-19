@@ -36,3 +36,7 @@ class Encoder(nn.Module):
             X=self.layers[i](X,mask)
         X=self.Norm(X)
         return X
+
+class Bert(nn.Module):
+    def __init__(self) -> None:
+        super(Bert,self).__init__()
