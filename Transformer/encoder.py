@@ -1,9 +1,15 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import copy
 from attention import SelfAttention
 from feedforward import MLP
 from position import CosinPosition
+
+
+def cloneLayers(layer,n):
+    return nn.ModuleList(copy.deepcopy(layer))
+
 
 class EncoderBlock(nn.Module):
     def __init__(self,d_model,head=8,dropout=0.1):
