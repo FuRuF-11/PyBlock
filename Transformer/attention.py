@@ -67,14 +67,14 @@ class SelfAttention(nn.Module):
         return output
 
 
-class CasualAttention(nn.Module):
+class CasualSelfAttention(nn.Module):
     ''' 
     an implmentation of masked multi-head self attention 
     which is often used in NLP models like GPT.
     the length and width of mask matrix equal to the length of sentence 
     '''
     def __init__(self,d_model,head,sentence_length,dropout=0.1) -> None:
-        super(CasualAttention).__init__()
+        super(CasualSelfAttention).__init__()
         self.register_buffer(\
             'mask',torch.tril(torch.ones(sentence_length,sentence_length)).\
             view(1,1,sentence_length,sentence_length))
