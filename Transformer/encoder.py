@@ -23,7 +23,7 @@ class EncoderBlock(nn.Module):
         return X
     
 class Encoder(nn.Module):
-    def __init__(self,d_model,layer_size=6,head=8,dropout=0.1,max_length=1000) -> None:
+    def __init__(self,d_model,layer_size=6,head=8,dropout=0.1,max_length=2000) -> None:
         super(Encoder,self).__init__()
         self.N=layer_size
         self.position=CosinPosition(d_model,max_length,dropout)
