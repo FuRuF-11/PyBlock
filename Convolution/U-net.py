@@ -34,6 +34,12 @@ class up_conv(nn.Module):
 
 class U_net(nn.Module):
     def __init__(self,inChannal,outChannal,C_size=64,kernel_size=3) -> None:
+        '''
+        inChannal
+        outChannal
+        C_size=64: mid-channal
+        kernel_size=3
+        '''
         super(U_net,self).__init__()
         a=C_size
         self.maxPooling=nn.MaxPool2d()
