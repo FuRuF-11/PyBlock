@@ -12,6 +12,14 @@ Files Tree:
 |   `-- WaveNet.py
 |-- README.md
 |-- Recurrent
+|   |-- GNN.py
 |   `-- NerualTuringMachine.py
 `-- Transformer
-    `-- encoder.py
+    |-- attention.py
+    |-- decoder.py
+    |-- embedding.py
+    |-- encoder.py
+    |-- feedforward.py
+    |-- position.py
+    `-- transformer.py
+
