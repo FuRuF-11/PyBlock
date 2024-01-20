@@ -14,6 +14,7 @@ def attention(q,k,v,mask=None,dropout=None):
     # sorce.size()=(batch_size,self.head,sentence_length,sentence_length)
     score=torch.matmul(q,k.transpose(-2,-1))/torch.sqrt(torch.tensor(d_k).float())
     if(mask!=None):
+        mask=mask.unqueeze(1)
         score=score.masked_fill(mask==0,float('-inf'))
     att_score=F.softmax(score,dim=-1)
     if(dropout != None):
