@@ -23,16 +23,10 @@ def sourceMask(src,pad=0):
         pad: the pad, could be 0/None/<pad>/...
         '''
         # unsqueeze(-2) to align with the multi-head attention to boardcast
-        # src_mask: [batch,1,sentence,d_model]
+        # src: [batch,sentence]-->2*.unqueeze(1)-->src_mask: [batch,1,1,sentence]
         # att_weight: [batch,head,sentence,sentence]
-        src_mask=(src!=pad).unqueeze(-2)
+        src_mask=(src!=pad).unqueeze(1).unqueeze(1)
         return src_mask
-
-# src [batch,sentence,d_model]
-# -3,-2,-1/0,1,2
-#---(unsqueeze(-2))--->
-# src_mask [batch,1,sentence,d_model]
-# -4,-3,-2,-1
 
 class DecoderBlock(nn.Module):
     def __init__(self,d_model,head=8,max_length=2000,dropout=0.1) -> None:
