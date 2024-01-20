@@ -33,7 +33,7 @@ class Transformer(nn.Module):
         head=8: the head size of multi-head attention
         pad=0: the pad of src_mask,could be 0/None/<pad>
         dropout=0.1: the dropout rate
-        max_length=2000: the maxnine allowence length of sentences in position encode
+        max_length=2000: the maximum allowed length of sentences in position encoder
         '''
         super(Transformer,self).__init__()
         self.encoder=Encoder(d_model,layer_size,head,dropout,max_length)
