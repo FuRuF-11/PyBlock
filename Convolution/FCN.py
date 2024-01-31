@@ -1,82 +1,117 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torchvision
 import math
 
-# fix needed
-
-# h,w: height and width  of input picture 
-
-class BackBoneNet(nn.Module):
-    '''
-    FCN need a backbone net to fretch the freature 
-    this is just a implementation of a simple CNN,you can train this on a large data set  
-    if you want  to use this net, you just need to load 4 conv layers 
-    if you want use a pre-train model, you can write your own backbone net and sand it to FCN
-    '''
-    def __init__(self,in_channal,out_channal,picture_ize=(512,512),dropout=0.1) -> None:
-        '''
-        in_channal and out_channal are just the literal mean
-        picture_size accept the  
-        '''
+class ResNet18(nn.Module):
+    def __init__(self) -> None:
         super().__init__()
-        self.h,self.w=picture_ize
-        # [h-->1/2*h]
-        self.conv1=nn.Sequential(
-            nn.Conv2d(in_channal,1024,kernel_size=3,padding=1),
-            nn.ReLU(),
-            nn.BatchNorm2d(1024),
-            # pooling to half the size of feature map
-            # [batch, channal ,h,w]--->[batch, channal ,h/2,w/2]
-            nn.MaxPool2d(kernel_size=2,stride=2)
+        self.model=torchvision.models.resnet18(pretrained=True)
+        self.perpare= nn.Sequential(
+            self.model.conv1,
+            self.model.bn1,
+            self.model.relu,
+            self.model.maxpool
         )
-        # [1/2*h-->1/4*h]
-        self.conv2=nn.Sequential(
-            nn.Conv2d(1024,512,kernel_size=3,padding=1),
-            nn.ReLU(),
-            nn.BatchNorm2d(512),
-            nn.MaxPool2d(kernel_size=2,stride=2)
-        )
-        # [1/4*h-->1/8*h]
-        self.conv3=nn.Sequential(
-            nn.Conv2d(512,256,kernel_size=3,padding=1),
-            nn.ReLU(),
-            nn.BatchNorm2d(256),
-            nn.MaxPool2d(kernel_size=2,stride=2)
-        )
-        # [1/8*h-->1/16*h]
-        self.conv4=nn.Sequential(
-            nn.Conv2d(256,128,kernel_size=3,padding=1),
-            nn.ReLU(),
-            nn.BatchNorm2d(128),
-            nn.MaxPool2d(kernel_size=2,stride=2)
-        )
-        # [1/16*h-->1/32*h]
-        tmp=128*int(1/32*self.h*1/32*self.w)
-        self.mlp=nn.Sequential(
-            nn.Linear(tmp,tmp+out_channal),
-            nn.ReLU(),
-            nn.Linear(tmp+out_channal,out_channal),
-            nn.Sigmoid()
-        )
+        self.layer1=self.model.layer1
+        self.layer2=self.model.layer2
+        self.layer3=self.model.layer3
+        self.layer4=self.model.layer4
+
+    @torch.no_grad()
     def forward(self,X):
-        
-        s1=self.conv1(X)
-        f1=self.conv2(s1)
-        f2=self.conv3(f1)
-        f3=self.conv4(f2)
-        # [batch,channal,h,w](4D)-->[batch,channal*h*w](2D),align the input size
-        f3=f3.view(f3.size(0),-1)
-        output=self.mlp(f3)
-        return output
+        X=self.perpare(X)
+        f0=self.layer1(X)
+        f1=self.layer2(f0)
+        f2=self.layer3(f1)
+        f3=self.layer4(f2)
+        return f1,f2,f3
 
 
 class FCN(nn.Module):
-    def __init__(self,in_channal,out_channal,backbone,kernel_size=3,stride=8,dropout=0.1):
+    def __init__(self,in_channal,out_channal,backbone=None,kernel_size=3,stride=8,dropout=0.1):
+        '''
+        the backbone need to  return at least three feature f1,f2,f3
+        and the default set is ResNet18 offering by torchvision which has been pretrained 
+        '''
         super().__init__()
-        
-        
+        if backbone==None:
+            self.backbone=ResNet18()
+        else:
+            self.backbone=backbone
+
+            
     def forward(self,X):
         output=None
         return output
         
+
+# set layer name set of resnet18
+# conv1
+# bn1
+# relu
+# maxpool
+# layer1
+# layer1.0
+# layer1.0.conv1
+# layer1.0.bn1
+# layer1.0.relu
+# layer1.0.conv2
+# layer1.0.bn2
+# layer1.1
+# layer1.1.conv1
+# layer1.1.bn1
+# layer1.1.relu
+# layer1.1.conv2
+# layer1.1.bn2
+# layer2
+# layer2.0
+# layer2.0.conv1
+# layer2.0.bn1
+# layer2.0.relu
+# layer2.0.conv2
+# layer2.0.bn2
+# layer2.0.downsample
+# layer2.0.downsample.0
+# layer2.0.downsample.1
+# layer2.1
+# layer2.1.conv1
+# layer2.1.bn1
+# layer2.1.relu
+# layer2.1.conv2
+# layer2.1.bn2
+# layer3
+# layer3.0
+# layer3.0.conv1
+# layer3.0.bn1
+# layer3.0.relu
+# layer3.0.conv2
+# layer3.0.bn2
+# layer3.0.downsample
+# layer3.0.downsample.0
+# layer3.0.downsample.1
+# layer3.1
+# layer3.1.conv1
+# layer3.1.bn1
+# layer3.1.relu
+# layer3.1.conv2
+# layer3.1.bn2
+# layer4
+# layer4.0
+# layer4.0.conv1
+# layer4.0.bn1
+# layer4.0.relu
+# layer4.0.conv2
+# layer4.0.bn2
+# layer4.0.downsample
+# layer4.0.downsample.0
+# layer4.0.downsample.1
+# layer4.1
+# layer4.1.conv1
+# layer4.1.bn1
+# layer4.1.relu
+# layer4.1.conv2
+# layer4.1.bn2
+# avgpool
+# fc
