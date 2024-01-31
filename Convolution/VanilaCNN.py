@@ -3,21 +3,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 
-# fix needed
-
-# h,w: height and width  of input picture 
-
-class BackBoneNet(nn.Module):
+class CNN(nn.Module):
     '''
-    FCN need a backbone net to fretch the freature 
-    this is just a implementation of a simple CNN,you can train this on a large data set  
-    if you want  to use this net, you just need to load 4 conv layers 
-    if you want use a pre-train model, you can write your own backbone net and sand it to FCN
+    Vanila CNN
     '''
     def __init__(self,in_channal,out_channal,picture_ize=(512,512),dropout=0.1) -> None:
         '''
         in_channal and out_channal are just the literal mean
-        picture_size accept the  
+        picture_size accept the height and width of input picture as a tuple  
         '''
         super().__init__()
         self.h,self.w=picture_ize
@@ -69,14 +62,3 @@ class BackBoneNet(nn.Module):
         f3=f3.view(f3.size(0),-1)
         output=self.mlp(f3)
         return output
-
-
-class FCN(nn.Module):
-    def __init__(self,in_channal,out_channal,backbone,kernel_size=3,stride=8,dropout=0.1):
-        super().__init__()
-        
-        
-    def forward(self,X):
-        output=None
-        return output
-        
