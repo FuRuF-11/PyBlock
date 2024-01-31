@@ -5,6 +5,8 @@ import math
 
 # fix needed
 
+# h,w: height and width  of input picture 
+
 class BackBoneNet(nn.Module):
     '''
     FCN need a backbone net to fretch the freature 
@@ -12,37 +14,50 @@ class BackBoneNet(nn.Module):
     you need to return 3 level feature for unsampling
     if you want use a pre-train model, you can write your own backbone net and sand it to FCN
     '''
-    def __init__(self,in_channal,out_channal,dropout=0.1) -> None:
+    def __init__(self,in_channal,out_channal,picture_ize=(512,512),dropout=0.1) -> None:
+        '''
+        in_channal and out_channal are just the literal mean
+        picture_size accept the  
+        '''
         super().__init__()
+        self.picture_size=picture_ize
+        # [h-->1/2*h]
         self.conv1=nn.Sequential(
             nn.Conv2d(in_channal,1024,kernel_size=3,padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(1024),
             # pooling to half the size of feature map
+            # [batch, channal ,h,w]--->[batch, channal ,h/2,w/2]
             nn.MaxPool2d(kernel_size=2,stride=2)
         )
+        # [1/2*h-->1/4*h]
         self.conv2=nn.Sequential(
             nn.Conv2d(1024,512,kernel_size=3,padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(512),
             nn.MaxPool2d(kernel_size=2,stride=2)
         )
+        # [1/4*h-->1/8*h]
         self.conv3=nn.Sequential(
             nn.Conv2d(512,256,kernel_size=3,padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(256),
             nn.MaxPool2d(kernel_size=2,stride=2)
         )
+        # [1/8*h-->1/16*h]
         self.conv4=nn.Sequential(
             nn.Conv2d(256,128,kernel_size=3,padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(128),
             nn.MaxPool2d(kernel_size=2,stride=2)
         )
+        # [1/16*h-->1/32*h]
+        tmp=128*int(1/32*self.h*self.h)
         self.mlp=nn.Sequential(
-            nn.Linear(128),
+            nn.Linear(tmp,tmp+out_channal),
             nn.ReLU(),
-            nn.Linear(),
+            nn.Linear(tmp+out_channal,out_channal),
+            nn.Sigmoid()
         )
     def forward(self,X):
         
