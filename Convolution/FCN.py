@@ -2,7 +2,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
-import math
+
+
+# warning!!!!!!!!
+# this is a implementation of FCN with a backbone net from ResNet18
+# if you want to use your own backbone, you need to set the channel-
+# number of ConvTranspose2d() according to your input feature size 
+
 
 class ResNet18(nn.Module):
     def __init__(self) -> None:
@@ -30,49 +36,30 @@ class ResNet18(nn.Module):
 
 
 class FCN(nn.Module):
-    def __init__(self,in_channal,out_channal,backbone=None,kernel_size=3,stride=8,dropout=0.1):
+    def __init__(self,in_channel,out_channel,backbone=None,kernel_size=3,stride=8,dropout=0.1):
         '''
         the backbone need to  return at least four feature f0,f1,f2,f3
         and the default set is ResNet18 offering by torchvision which has been pretrained 
         '''
         super().__init__()
-        if backbone==None:
-            self.backbone=ResNet18()
-        else:
-            self.backbone=backbone
-        self.in_channal=in_channal
-        self.out_channal=out_channal
-        # in pytorch, the unsample is defult 
-        self.Upsample0=nn.Sequential(
-            nn.ConvTranspose2d(64,64,kernel_size=3,stride=2,padding=1),
+        self.backbone=ResNet18()
+        self.in_channal=in_channel
+        self.out_channal=out_channel
+        self.Upsample=[nn.Sequential(
+            nn.ConvTranspose2d(64*i,128*i,kernel_size=3,stride=2,padding=1),
             nn.ReLU(),
-            nn.BatchNorm2d(64)
-        )
-
-        self.Upsample1=nn.Sequential(
-            nn.ConvTranspose2d(64,128,kernel_size=3,stride=2,padding=1),
-            nn.ReLU(),
-            nn.BatchNorm2d(128)
-        )
-
-        self.Upsample2=nn.Sequential(
-            nn.ConvTranspose2d(64,64,kernel_size=3,stride=2,padding=1),
-            nn.ReLU(),
-            nn.BatchNorm2d(64)
-        )
-
-        self.Upsample3=nn.Sequential(
-            nn.ConvTranspose2d(64,64,kernel_size=3,stride=2,padding=1),
-            nn.ReLU(),
-            nn.BatchNorm2d(64)
-        )
+            nn.BatchNorm2d(64*i)
+            ) for i in range(1,5)]
+        
+        self.Segment=nn.ConvTranspose2d(1024,out_channel,kernel_size=1)
 
     def forward(self,X):
-        tmp=[None for i in range(4)]
-        tmp[0],tmp[1],tmp[2],tmp[3]=self.backbone(X)
-        for i in range():
-            pass
-        output=None
+        tmp=[out for idx,out in enumerate(self.backbone(X))]
+        for i,elem in enumerate(tmp):
+            s=self.Upsample[i](elem)
+            if(i!=len(tmp)):
+                s=s+tmp[i+1]
+        output=self.Segment(s)
         return output
         
 
