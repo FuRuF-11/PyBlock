@@ -26,13 +26,13 @@ class ResNet18(nn.Module):
         f1=self.layer2(f0)
         f2=self.layer3(f1)
         f3=self.layer4(f2)
-        return f1,f2,f3
+        return f0,f1,f2,f3
 
 
 class FCN(nn.Module):
     def __init__(self,in_channal,out_channal,backbone=None,kernel_size=3,stride=8,dropout=0.1):
         '''
-        the backbone need to  return at least three feature f1,f2,f3
+        the backbone need to  return at least four feature f0,f1,f2,f3
         and the default set is ResNet18 offering by torchvision which has been pretrained 
         '''
         super().__init__()
@@ -42,10 +42,36 @@ class FCN(nn.Module):
             self.backbone=backbone
         self.in_channal=in_channal
         self.out_channal=out_channal
-        
+        # in pytorch, the unsample is defult 
+        self.Upsample0=nn.Sequential(
+            nn.ConvTranspose2d(64,64,kernel_size=3,stride=2,padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(64)
+        )
 
+        self.Upsample1=nn.Sequential(
+            nn.ConvTranspose2d(64,128,kernel_size=3,stride=2,padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(128)
+        )
+
+        self.Upsample2=nn.Sequential(
+            nn.ConvTranspose2d(64,64,kernel_size=3,stride=2,padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(64)
+        )
+
+        self.Upsample3=nn.Sequential(
+            nn.ConvTranspose2d(64,64,kernel_size=3,stride=2,padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(64)
+        )
 
     def forward(self,X):
+        tmp=[None for i in range(4)]
+        tmp[0],tmp[1],tmp[2],tmp[3]=self.backbone(X)
+        for i in range():
+            pass
         output=None
         return output
         
