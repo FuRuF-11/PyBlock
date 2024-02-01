@@ -40,8 +40,11 @@ class FCN(nn.Module):
             self.backbone=ResNet18()
         else:
             self.backbone=backbone
+        self.in_channal=in_channal
+        self.out_channal=out_channal
+        
 
-            
+
     def forward(self,X):
         output=None
         return output
