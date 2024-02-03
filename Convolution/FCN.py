@@ -5,10 +5,14 @@ import torchvision
 
 
 # warning!!!!!!!!
+# this is just a example.
 # this is a implementation of FCN with a backbone net from VGG16, which has five maxpooling.
 # if you want to use your own backbone, you need to pay attention to those things.
 # First, the ConfirstvTranspose2d() operation is related with the pooling operation in FCN
 # everytime you want use a ConvTranspose2d(), you need to apply a pooling operation to decrease the feature size a half first
+# for we want to construct the segmented picture from feature map which only has a half size of what we want
+# Second, you can choose different features to reconstruct the segmented picture from pooling
+# in this example, we use all five features from five maxpooling operation   
 
 class ResNet18(nn.Module):
     def __init__(self) -> None:
