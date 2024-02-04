@@ -14,6 +14,13 @@ import torchvision
 # Second, you can choose different features to reconstruct the segmented picture from pooling
 # in this example, we use all five features from five maxpooling operation   
 
+class VGG16net(nn.Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.model=torchvision.models.vgg16(pretrained=True)
+
+
+
 class ResNet18(nn.Module):
     def __init__(self) -> None:
         super().__init__()
