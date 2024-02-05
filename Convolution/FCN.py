@@ -18,33 +18,12 @@ class VGG16net(nn.Module):
     def __init__(self) -> None:
         super().__init__()
         self.model=torchvision.models.vgg16(pretrained=True)
+        
 
 
 
-class ResNet18(nn.Module):
-    def __init__(self) -> None:
-        super().__init__()
-        self.model=torchvision.models.resnet18(pretrained=True)
-        self.perpare= nn.Sequential(
-            self.model.conv1,
-            self.model.bn1,
-            self.model.relu,
-            self.model.maxpool
-        )
-        self.layer1=self.model.layer1
-        self.layer2=self.model.layer2
-        self.layer3=self.model.layer3
-        self.layer4=self.model.layer4
-
-    @torch.no_grad()
     def forward(self,X):
-        X=self.perpare(X)
-        f0=self.layer1(X)
-        f1=self.layer2(f0)
-        f2=self.layer3(f1)
-        f3=self.layer4(f2)
-        return f0,f1,f2,f3
-
+        return 
 
 class FCN(nn.Module):
     def __init__(self,in_channel,out_channel,backbone=None,kernel_size=3,stride=8,dropout=0.1):
@@ -53,7 +32,7 @@ class FCN(nn.Module):
         and the default set is ResNet18 offering by torchvision which has been pretrained 
         '''
         super().__init__()
-        self.backbone=ResNet18()
+        self.backbone=VGG16net()
         self.in_channal=in_channel
         self.out_channal=out_channel
         self.Upsample=[nn.Sequential(
