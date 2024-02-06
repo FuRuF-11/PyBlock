@@ -18,12 +18,57 @@ class VGG16net(nn.Module):
     def __init__(self) -> None:
         super().__init__()
         self.model=torchvision.models.vgg16(pretrained=True)
-        t=[(0,4),(5,9),(10,16),(17,23),(24,30)]
-        self.layers=nn.ModuleList([self.model.features[i] for i in range()])
+        # [(0,4),(5,9),(10,16),(17,23),(24,30)]
+        self.layer0=nn.Sequential(
+            self.model.features[0],
+            self.model.features[1],
+            self.model.features[2],
+            self.model.features[3],
+            self.model.features[4]
+            )
+        self.layer1=nn.Sequential(
+            self.model.features[5],
+            self.model.features[6],
+            self.model.features[7],
+            self.model.features[8],
+            self.model.features[9]
+            )
+        self.layer2=nn.Sequential(
+            self.model.features[10],
+            self.model.features[11],
+            self.model.features[12],
+            self.model.features[13],
+            self.model.features[14],
+            self.model.features[15],
+            self.model.features[16]
+            )
+        self.layer3=nn.Sequential(
+            self.model.features[17],
+            self.model.features[18],
+            self.model.features[19],
+            self.model.features[20],
+            self.model.features[21],
+            self.model.features[22],
+            self.model.features[23]
+            )
+        self.layer4=nn.Sequential(
+            self.model.features[24],
+            self.model.features[25],
+            self.model.features[26],
+            self.model.features[27],
+            self.model.features[28],
+            self.model.features[29],
+            self.model.features[30]
+            )
 
-
+    @torch.no_grad()
     def forward(self,X):
-        return 
+        s0=self.layer0(X)
+        s1=self.layer0(s0)
+        s2=self.layer0(s1)
+        s3=self.layer0(s2)
+        s4=self.layer0(s3)
+        return s0,s1,s2,s3,s4
 
 class FCN(nn.Module):
     def __init__(self,in_channel,out_channel,backbone=None,kernel_size=3,stride=8,dropout=0.1):
