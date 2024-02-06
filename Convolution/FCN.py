@@ -18,8 +18,8 @@ class VGG16net(nn.Module):
     def __init__(self) -> None:
         super().__init__()
         self.model=torchvision.models.vgg16(pretrained=True)
-
-
+        t=[(0,4),(5,9),(10,16),(17,23),(24,30)]
+        self.layers=nn.ModuleList([self.model.features[i] for i in range()])
 
 
     def forward(self,X):
