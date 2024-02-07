@@ -109,10 +109,9 @@ class FCN(nn.Module):
 
     def forward(self,X):
         tmp=[out for idx,out in enumerate(self.backbone(X))]
-        for i,elem in enumerate(tmp):
-            s=self.Upsample[i](elem)
-            if(i!=len(tmp)):
-                s=s+tmp[i+1]
+        
+        
+        s=None
         output=self.Segment(s)
         return output
         
