@@ -64,16 +64,16 @@ class VGG16net(nn.Module):
     @torch.no_grad()
     def forward(self,X):
         s0=self.layer0(X)
-        s1=self.layer0(s0)
-        s2=self.layer0(s1)
-        s3=self.layer0(s2)
-        s4=self.layer0(s3)
+        s1=self.layer1(s0)
+        s2=self.layer2(s1)
+        s3=self.layer3(s2)
+        s4=self.layer4(s3)
         return s0,s1,s2,s3,s4
 
 class FCN(nn.Module):
     def __init__(self,in_channel,out_channel,backbone=None,kernel_size=3,stride=8,dropout=0.1):
         '''
-        the backbone need to  return at least four feature f0,f1,f2,f3
+        the backbone need to  return at least four feature f0,f1,f2,f3,f4
         and the default set is ResNet18 offering by torchvision which has been pretrained 
         '''
         super().__init__()
@@ -109,9 +109,11 @@ class FCN(nn.Module):
 
     def forward(self,X):
         tmp=[out for idx,out in enumerate(self.backbone(X))]
-        
-        
-        s=None
+        s=self.Upsample1(tmp[4])
+        s=s+self.Upsample2(tmp[3])
+        s=s+self.Upsample3(tmp[2])
+        s=s+self.Upsample4(tmp[1])
+        s=s+self.Upsample5(tmp[0])
         output=self.Segment(s)
         return output
         
