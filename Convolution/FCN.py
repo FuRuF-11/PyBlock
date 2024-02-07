@@ -80,12 +80,18 @@ class FCN(nn.Module):
         self.backbone=VGG16net()
         self.in_channal=in_channel
         self.out_channal=out_channel
-        self.Upsample=[nn.Sequential(
-            nn.ConvTranspose2d(64*i,128*i,kernel_size=3,stride=2,padding=1),
-            nn.ReLU(),
-            nn.BatchNorm2d(64*i)
-            ) for i in range(1,5)]
-        
+        self.Upsample1=nn.Sequential(
+            
+        )
+        self.Upsample2=nn.Sequential(
+            
+        )
+        self.Upsample3=nn.Sequential(
+            
+        )
+        self.Upsample4=nn.Sequential(
+            
+        )
         self.Segment=nn.ConvTranspose2d(1024,out_channel,kernel_size=1)
 
     def forward(self,X):
