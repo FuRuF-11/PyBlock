@@ -81,18 +81,31 @@ class FCN(nn.Module):
         self.in_channal=in_channel
         self.out_channal=out_channel
         self.Upsample1=nn.Sequential(
-            
+            nn.ConvTranspose2d(512,512,kernel_size=3, stride=1, padding=1, output_padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(512)
         )
         self.Upsample2=nn.Sequential(
-            
+            nn.ConvTranspose2d(512,256,kernel_size=3, stride=1, padding=1, output_padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(256)
         )
         self.Upsample3=nn.Sequential(
-            
+            nn.ConvTranspose2d(256,128,kernel_size=3, stride=1, padding=1, output_padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(128)
         )
         self.Upsample4=nn.Sequential(
-            
+            nn.ConvTranspose2d(128,64,kernel_size=3, stride=1, padding=1, output_padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(64)
         )
-        self.Segment=nn.ConvTranspose2d(1024,out_channel,kernel_size=1)
+        self.Upsample5=nn.Sequential(
+            nn.ConvTranspose2d(64,32,kernel_size=3, stride=1, padding=1, output_padding=1),
+            nn.ReLU(),
+            nn.BatchNorm2d(32)
+        )
+        self.Segment=nn.ConvTranspose2d(32,out_channel,kernel_size=1)
 
     def forward(self,X):
         tmp=[out for idx,out in enumerate(self.backbone(X))]
