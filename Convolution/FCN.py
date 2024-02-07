@@ -81,27 +81,27 @@ class FCN(nn.Module):
         self.in_channal=in_channel
         self.out_channal=out_channel
         self.Upsample1=nn.Sequential(
-            nn.ConvTranspose2d(512,512,kernel_size=3, stride=1, padding=1, output_padding=1),
+            nn.ConvTranspose2d(512,512,kernel_size=3, stride=2, padding=1, output_padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(512)
         )
         self.Upsample2=nn.Sequential(
-            nn.ConvTranspose2d(512,256,kernel_size=3, stride=1, padding=1, output_padding=1),
+            nn.ConvTranspose2d(512,256,kernel_size=3, stride=2, padding=1, output_padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(256)
         )
         self.Upsample3=nn.Sequential(
-            nn.ConvTranspose2d(256,128,kernel_size=3, stride=1, padding=1, output_padding=1),
+            nn.ConvTranspose2d(256,128,kernel_size=3, stride=2, padding=1, output_padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(128)
         )
         self.Upsample4=nn.Sequential(
-            nn.ConvTranspose2d(128,64,kernel_size=3, stride=1, padding=1, output_padding=1),
+            nn.ConvTranspose2d(128,64,kernel_size=3, stride=2, padding=1, output_padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(64)
         )
         self.Upsample5=nn.Sequential(
-            nn.ConvTranspose2d(64,32,kernel_size=3, stride=1, padding=1, output_padding=1),
+            nn.ConvTranspose2d(64,32,kernel_size=3, stride=2, padding=1, output_padding=1),
             nn.ReLU(),
             nn.BatchNorm2d(32)
         )
@@ -109,11 +109,12 @@ class FCN(nn.Module):
 
     def forward(self,X):
         tmp=[out for idx,out in enumerate(self.backbone(X))]
+        #use the low level feature frist 
         s=self.Upsample1(tmp[4])
-        s=s+self.Upsample2(tmp[3])
-        s=s+self.Upsample3(tmp[2])
-        s=s+self.Upsample4(tmp[1])
-        s=s+self.Upsample5(tmp[0])
+        s=self.Upsample2(s+tmp[3])
+        s=self.Upsample3(s+tmp[2])
+        s=self.Upsample4(s+tmp[1])
+        s=self.Upsample5(s+tmp[0])
         output=self.Segment(s)
         return output
         
