@@ -13,7 +13,7 @@ import math
 # class RegionProposalNet()
 
 class MaskRCNN(nn.Module):
-    def __init__(self) -> None:
+    def __init__(self,in_channal,out_channal,kernel_size=3) -> None:
         super().__init__()
 
     def forward(self,X):
