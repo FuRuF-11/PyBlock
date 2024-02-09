@@ -8,12 +8,17 @@ Files Tree:
 .
 |-- Convolution
 |   |-- CausalConv.py
+|   |-- FCN.py
+|   |-- R-CNN.py
 |   |-- U-net.py
-|   `-- WaveNet.py
+|   |-- VanilaCNN.py
+|   |-- WaveNet.py
+|   `-- Yolo.py
 |-- README.md
 |-- Recurrent
 |   |-- GNN.py
-|   `-- NerualTuringMachine.py
+|   |-- NerualTuringMachine.py
+|   `-- NormalRNNs.py
 `-- Transformer
     |-- attention.py
     |-- decoder.py
@@ -22,4 +27,3 @@ Files Tree:
     |-- feedforward.py
     |-- position.py
     `-- transformer.py
-
