@@ -6,11 +6,17 @@ import torch.nn.functional as F
 import math
 
 
-# class backbone()
+class backbone(nn.Module):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
-# class Mask()
+class Mask(nn.Module):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
-# class RegionProposalNet()
+class RegionProposalNet(nn.Module):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
 class MaskRCNN(nn.Module):
     def __init__(self,in_channal,out_channal,kernel_size=3) -> None:
