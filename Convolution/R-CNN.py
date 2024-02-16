@@ -19,8 +19,12 @@ class RegionProposalNet(nn.Module):
         super().__init__(*args, **kwargs)
 
 class MaskRCNN(nn.Module):
-    def __init__(self,in_channal,out_channal,kernel_size=3) -> None:
+    def __init__(self,in_channal,out_channal,kernel_size=3,pre_train=False) -> None:
         super().__init__()
+        if(pre_train==False):
+            pass
+        else:
+            pass
 
     def forward(self,X):
         return 
