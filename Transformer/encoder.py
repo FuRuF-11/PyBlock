@@ -11,7 +11,7 @@ def cloneLayers(layer,n):
 
 class EncoderBlock(nn.Module):
     def __init__(self,d_model,head=8,dropout=0.1):
-        super(EncoderBlock,self).__init__
+        super(EncoderBlock,self).__init__()
         self.Norm1=nn.LayerNorm(d_model)
         self.Norm2=nn.LayerNorm(d_model)
         self.attention=SelfAttention(d_model,head,dropout)
