@@ -17,8 +17,10 @@ class CosinPosition(nn.Module):
         t=torch.arange(0,max_length,dtype=torch.float).view(-1,1)
         # just to simplify the computation 
         div_term=torch.exp(torch.arange(0,max_length,2,dtype=torch.float)*(-math.log(10000.0)/d_model))
-        position[:,0::2]=torch.sin(t*div_term)
-        position[:,1::2]=torch.cos(t*div_term)
+        # a=t*div_term
+        # print(a[:,:d_model//2].size())
+        position[:,0::2]=torch.sin((t*div_term)[:,:d_model//2])
+        position[:,1::2]=torch.cos((t*div_term)[:,:d_model//2])
         # for broadcast
         position.view(1,max_length,d_model)
         self.register_buffer("position",position)
