@@ -49,3 +49,26 @@ class Transformer(nn.Module):
         return output
     
 
+class Transformer(nn.Module):
+    def __init__(self,config) -> None:
+        '''
+        d_model: the dims of every vector
+        layer_size=6: the layer size of encoder/decoder
+        head=8: the head size of multi-head attention
+        pad=0: the pad of src_mask,could be 0/None/<pad>
+        dropout=0.1: the dropout rate
+        max_length=2000: the maximum allowed length of sentences in position encoder
+        '''
+        super(Transformer,self).__init__()
+        self.encoder=Encoder(self,config)
+        self.decoder=Decoder(self,config)
+        self.output=nn.Linear(config["hidden_size"],config["output_size"],bias=True)
+        self.pad=config["pad"]
+
+    def forward(self,source_seq,traget_seq):
+        en_output=self.encoder(source_seq)
+        src_mask=sourceMask(source_seq,self.pad)
+        de_output=self.decoder(traget_seq,en_output,src_mask)
+        output=self.output(de_output)
+        return output
+
