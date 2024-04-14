@@ -19,13 +19,13 @@ class NewGELU(nn.Module):
 
 
 class MLP(nn.Module):
-    def __init__(self,in_feature,dropout=0.1) -> None:
+    def __init__(self,in_feature,hidden_size,dropout=0.1) -> None:
         super(MLP,self).__init__()
         self.MLP=nn.Sequential(
             nn.LayerNorm(in_feature),
-            nn.Linear(in_feature,in_feature),
+            nn.Linear(in_features=in_feature,out_features=hidden_size),
             NewGELU(),
-            nn.Linear(in_feature,in_feature),
+            nn.Linear(in_features=hidden_size,out_features=in_feature),
             nn.Dropout(dropout)
         )
     def forward(self,X):

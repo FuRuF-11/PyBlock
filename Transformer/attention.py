@@ -27,9 +27,9 @@ class MultiHeadAttention(nn.Module):
         self.head=head
         self.d_head=d_model//head
         self.d_model=d_model
-        self.K=nn.Linear(d_model,d_model)
-        self.Q=nn.Linear(d_model,d_model)
-        self.V=nn.Linear(d_model,d_model)
+        self.K=nn.Linear(d_model,d_model,bias=False)
+        self.Q=nn.Linear(d_model,d_model,bias=False)
+        self.V=nn.Linear(d_model,d_model,bias=False)
         self.output=nn.Linear(d_model,d_model)
         self.dropout=nn.Dropout(dropout)
 

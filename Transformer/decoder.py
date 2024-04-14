@@ -10,11 +10,11 @@ def cloneLayers(layer,n):
     return nn.ModuleList([copy.deepcopy(layer) for _ in range(n)])
 
 class DecoderBlock(nn.Module):
-    def __init__(self,d_model,head=8,dropout=0.1) -> None:
+    def __init__(self,d_model,hidden_size,sentence_length,head=8,dropout=0.1) -> None:
         super(DecoderBlock,self).__init__()
-        self.attention1=CasualSelfAttention(d_model,head,dropout)
+        self.attention1=CasualSelfAttention(d_model,head,sentence_length,dropout)
         self.attention2=MultiHeadAttention(d_model,head,dropout)
-        self.feedforward=MLP(d_model,dropout)
+        self.feedforward=MLP(d_model,hidden_size,dropout)
         self.Norm1=nn.LayerNorm(d_model)
         self.Norm2=nn.LayerNorm(d_model)
         self.Norm3=nn.LayerNorm(d_model)
@@ -27,12 +27,12 @@ class DecoderBlock(nn.Module):
         return X
 
 class Decoder(nn.Module):
-    def __init__(self,d_model,layer_size=6,head=8,dropout=0.1,max_length=2000) -> None:
+    def __init__(self,config):
         super(Decoder,self).__init__()
-        self.N=layer_size
-        self.position=CosinPosition(d_model,max_length,dropout)
-        self.layers=cloneLayers(DecoderBlock(d_model,head,dropout),layer_size)
-        self.Norm=nn.LayerNorm(d_model)
+        self.layer_size=config["layer_size"]
+        self.position=CosinPosition(config["d_model"],config["sentence_length"],config["dropout"])
+        self.layers=cloneLayers(DecoderBlock(config["d_model"],config["hidden_size"],config["sentence_length"],config["head_num"],config["dropout"]),self.layer_size)
+        self.Norm=nn.LayerNorm(config["d_model"])
 
     def forward(self,X,en_output,src_mask=None):
         X=X+self.position(X)
