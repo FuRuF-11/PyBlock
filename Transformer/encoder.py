@@ -19,11 +19,8 @@ class EncoderBlock(nn.Module):
 
     def forward(self,X,mask=None):
         X=X+self.attention(self.Norm1(X),mask)
-        print(X.size())
-        print("------------")
         # batch, sentence_length, d_model
         X=X+self.feedforward(self.Norm2(X))
-        print(X.size())
         return X
     
 class Encoder(nn.Module):
