@@ -41,9 +41,9 @@ class MultiHeadAttention(nn.Module):
         # q.size()=(batch_size,sentence_length,self.d_model)
         batch_size=q.size(0)
         # q.size()=(batch_size,self.head,sentence_length,self.d_head)
-        q=self.q(q).view(batch_size,-1,self.head,self.d_head).transpose(1,2)
-        k=self.k(k).view(batch_size,-1,self.head,self.d_head).transpose(1,2)
-        v=self.v(v).view(batch_size,-1,self.head,self.d_head).transpose(1,2)
+        q=self.Q(q).view(batch_size,-1,self.head,self.d_head).transpose(1,2)
+        k=self.K(k).view(batch_size,-1,self.head,self.d_head).transpose(1,2)
+        v=self.V(v).view(batch_size,-1,self.head,self.d_head).transpose(1,2)
 
         # attention_score.size()=(batch_size,self.head,sentence_length,self.d_head)
         attention_score=attention(q,k,v,mask,self.dropout)
@@ -73,8 +73,8 @@ class CasualSelfAttention(nn.Module):
     which is often used in NLP models like GPT.
     the length and width of mask matrix equal to the length of sentence 
     '''
-    def __init__(self,d_model,head,sentence_length,dropout=0.1) -> None:
-        super(CasualSelfAttention).__init__()
+    def __init__(self,d_model,sentence_length,head,dropout=0.1) -> None:
+        super().__init__()
         self.register_buffer(\
             'mask',torch.tril(torch.ones(sentence_length,sentence_length)).\
             view(1,1,sentence_length,sentence_length))

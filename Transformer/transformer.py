@@ -25,39 +25,18 @@ def sourceMask(src,pad=0):
         src_mask=(src!=pad).unqueeze(1).unqueeze(1)
         return src_mask
 
-# class Transformer(nn.Module):
-#     def __init__(self,d_model,layer_size=6,head=8,pad=0,dropout=0.1,max_length=2000) -> None:
-#         '''
-#         d_model: the dims of every vector
-#         layer_size=6: the layer size of encoder/decoder
-#         head=8: the head size of multi-head attention
-#         pad=0: the pad of src_mask,could be 0/None/<pad>
-#         dropout=0.1: the dropout rate
-#         max_length=2000: the maximum allowed length of sentences in position encoder
-#         '''
-#         super(Transformer,self).__init__()
-#         self.encoder=Encoder(d_model,layer_size,head,dropout,max_length)
-#         self.decoder=Decoder(d_model,layer_size,head,dropout,max_length)
-#         self.output=nn.Linear(d_model,d_model,bias=True)
-#         self.pad=pad
-
-#     def forward(self,source_seq,traget_seq):
-#         en_output=self.encoder(source_seq)
-#         src_mask=sourceMask(source_seq,self.pad)
-#         de_output=self.decoder(traget_seq,en_output,src_mask)
-#         output=self.output(de_output)
-#         return output
-    
 
 class Transformer(nn.Module):
     def __init__(self,config) -> None:
         '''
+        input config should contian at least these args
         d_model: the dims of every vector
+        hidden_size: the hidden size of hidden layer
+        sentence_length: the length of sentence
         layer_size=6: the layer size of encoder/decoder
         head=8: the head size of multi-head attention
         pad=0: the pad of src_mask,could be 0/None/<pad>
         dropout=0.1: the dropout rate
-        max_length=2000: the maximum allowed length of sentences in position encoder
         '''
         super(Transformer,self).__init__()
         self.encoder=Encoder(config)

@@ -12,7 +12,7 @@ def cloneLayers(layer,n):
 class DecoderBlock(nn.Module):
     def __init__(self,d_model,hidden_size,sentence_length,head=8,dropout=0.1) -> None:
         super(DecoderBlock,self).__init__()
-        self.attention1=CasualSelfAttention(d_model,head,sentence_length,dropout)
+        self.attention1=CasualSelfAttention(d_model,sentence_length,head,dropout)
         self.attention2=MultiHeadAttention(d_model,head,dropout)
         self.feedforward=MLP(d_model,hidden_size,dropout)
         self.Norm1=nn.LayerNorm(d_model)
