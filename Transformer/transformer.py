@@ -16,25 +16,20 @@ def sourceMask(src1,src2=None):
         [K, K, K, K, K, K, N]
         we need to mask N to prevent attention mechanisms from noticing them.
         and that is what this function for
-        src: the source sequence
-        pad: the pad, could be 0/None/<pad>/...
+        src1: [batch_size, seq_len]
+        src2: [batch_size, seq_len]
+        seq_len could be src_len or it could be tgt_len
+        seq_len in seq_q and seq_len in seq_k maybe not equal
         '''
         # unsqueeze(-2) to align with the multi-head attention to boardcast
         # src: [batch,sentence]-->2*.unqueeze(1)-->src_mask: [batch,1,1,sentence]
-        # att_weight: [batch,head,sentence,sentence]
-        src_mask=(src1.sum(dim=2)!=0).float()
+        if(src2==None):
+             src2=src1
+        batch_size, len_q = src1.size()
+        batch_size, len_k = src2.size()
+        pad_attn_mask = src2.data.eq(0).unsqueeze(1).float()  # [batch_size, 1, len_k], True is masked
+        return pad_attn_mask.expand(batch_size, len_q, len_k)
         
-        # .unsqueeze(-2).unsqueeze(1)
-
-        # a=src_mask
-        
-        # print(a.size())
-        # print(a)
-        # print(src_mask)
-        # sc1.size(1),sc2.size()
-        # src_mask=[]
-        return src_mask
-
 
 class Transformer(nn.Module):
     def __init__(self,config) -> None:
