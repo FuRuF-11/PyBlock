@@ -27,7 +27,7 @@ class Encoder(nn.Module):
     def __init__(self,config) -> None:
         super(Encoder,self).__init__()
         self.layer_size=config["layer_size"]
-        self.position=CosinPosition(config["d_model"],config["sentence_length"],config["dropout"])
+        self.position=CosinPosition(config["d_model"],config["src_length"],config["dropout"])
         self.layers=cloneLayers(EncoderBlock(config["d_model"],config["hidden_size"],config["head_num"],config["dropout"]),self.layer_size)
         self.Norm=nn.LayerNorm(config["d_model"])
 

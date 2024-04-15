@@ -30,13 +30,13 @@ class Decoder(nn.Module):
     def __init__(self,config):
         super(Decoder,self).__init__()
         self.layer_size=config["layer_size"]
-        self.position=CosinPosition(config["d_model"],config["sentence_length"],config["dropout"])
-        self.layers=cloneLayers(DecoderBlock(config["d_model"],config["hidden_size"],config["sentence_length"],config["head_num"],config["dropout"]),self.layer_size)
+        self.position=CosinPosition(config["d_model"],config["trg_length"],config["dropout"])
+        self.layers=cloneLayers(DecoderBlock(config["d_model"],config["hidden_size"],config["trg_length"],config["head_num"],config["dropout"]),self.layer_size)
         self.Norm=nn.LayerNorm(config["d_model"])
 
     def forward(self,X,en_output,src_mask=None):
         X=X+self.position(X)
-        for i in range(self.N):
+        for i in range(self.layer_size):
             X=self.layers[i](X,en_output,src_mask)
         X=self.Norm(X)
         return X
