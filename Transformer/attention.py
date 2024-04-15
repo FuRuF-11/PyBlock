@@ -6,6 +6,34 @@ import torch.nn.functional as F
 we only implemet the multi-head version attention ,because the single-head is just a speical version of multi-head
 '''
 
+def sourceMask(src1,src2=None):
+        '''
+        the length of source sentences are not always same, this is not good for computation.
+        to make sequences have the same length, we need to align sentences from left.
+        so a real data batch may look like this, in which 'N' means None
+        [C, C, C, N, N, N, N]
+        [V, V. V, V, N, N, N]
+        [K, K, K, K, K, K, N]
+        we need to mask N to prevent attention mechanisms from noticing them.
+        and that is what this function for
+        src1: [batch_size, seq_len]
+        src2: [batch_size, seq_len]
+        seq_len could be src_len or it could be tgt_len
+        seq_len in seq_q and seq_len in seq_k maybe not equal
+        from: https://wmathor.com/index.php/archives/1455/
+        '''
+        # unsqueeze(-2) to align with the multi-head attention to boardcast
+        # src: [batch,sentence]-->2*.unqueeze(1)-->src_mask: [batch,1,1,sentence]
+        
+        if(src2==None):
+             src2=src1
+        src1=(src1.sum(dim=2)==0)
+        src2=(src2.sum(dim=2)==0)
+        batch_size, len_q = src1.size()
+        batch_size, len_k = src2.size()
+        pad_attn_mask = src2.data.eq(0).unsqueeze(1).float()  # [batch_size, 1, len_k], True is masked
+        return pad_attn_mask.expand(batch_size, len_q, len_k)
+
 def attention(q,k,v,mask=None,dropout=None):
     '''
     compute attention score 
@@ -14,7 +42,7 @@ def attention(q,k,v,mask=None,dropout=None):
     # sorce.size()=(batch_size,self.head,sentence_length,sentence_length)
     score=torch.matmul(q,k.transpose(-2,-1))/torch.sqrt(torch.tensor(d_k).float())
     if(mask!=None):
-        score=score.masked_fill(mask==0,float('-inf'))
+        score=score.masked_fill(mask.unsqueeze(1)==0,float('-inf'))
     att_score=F.softmax(score,dim=-1)
     if(dropout != None):
         att_score=dropout(att_score)

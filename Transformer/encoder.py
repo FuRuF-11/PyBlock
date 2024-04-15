@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import copy
-from .attention import SelfAttention
+from .attention import SelfAttention, sourceMask
 from .feedforward import MLP
 from .position import CosinPosition
 
