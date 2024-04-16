@@ -29,7 +29,9 @@ class Transformer(nn.Module):
         de_output=self.decoder(trg_seq,en_output,mask2)
         # output=self.output(de_output)
         return de_output
-
-    def generate(self):
-        pass
+    
+    @torch.no_grad()
+    def generate(self,sentnece,max_length=100):
+        for _ in range(max_length):
+            pass
         
