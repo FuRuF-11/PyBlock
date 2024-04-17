@@ -31,8 +31,9 @@ class Transformer(nn.Module):
         return de_output
     
     @torch.no_grad()
-    def generate(self,sentnece,max_length=100):
+    def generate(self,sentnece1,sentnece2,max_length=100):
         '''
-        
+        we need two different sentences to run the transformr
+        and the second sentnece need to be finished 
         '''
         pass
