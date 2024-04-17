@@ -32,6 +32,7 @@ class Transformer(nn.Module):
     
     @torch.no_grad()
     def generate(self,sentnece,max_length=100):
-        for _ in range(max_length):
-            pass
+        '''
         
+        '''
+        pass
