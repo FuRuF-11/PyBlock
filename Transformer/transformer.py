@@ -36,4 +36,11 @@ class Transformer(nn.Module):
         we need two different sentences to run the transformr
         and the second sentnece need to be finished 
         '''
-        pass
+        mask1=sourceMask(src1=sentnece1)
+        en_output=self.encoder(sentnece1,mask1)
+        for _ in range(max_length):
+            mask2=sourceMask(src1=sentnece1,src2=sentnece2)
+            de_output=self.decoder(sentnece2,en_output,mask2)
+            if(de_output[-1]==self.config["end_word"]):
+                return sentnece2
+            sentnece2=torch.cat([sentnece2,de_output[-1]],dim=0)
