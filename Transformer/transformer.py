@@ -18,6 +18,7 @@ class Transformer(nn.Module):
         dropout=0.1: the dropout rate
         '''
         super(Transformer,self).__init__()
+        self.config=config
         self.encoder=Encoder(config)
         self.decoder=Decoder(config)
         # self.output=nn.Linear(config["hidden_size"],config["output_size"],bias=True)
@@ -36,11 +37,14 @@ class Transformer(nn.Module):
         we need two different sentences to run the transformr
         and the second sentnece need to be finished 
         '''
+        sentnece1=sentnece1.view(1,sentnece1.size(0),sentnece1.size(1))
+        sentnece2=sentnece2.view(1,sentnece2.size(0),sentnece2.size(1))
         mask1=sourceMask(src1=sentnece1)
         en_output=self.encoder(sentnece1,mask1)
         for _ in range(max_length):
             mask2=sourceMask(src1=sentnece1,src2=sentnece2)
             de_output=self.decoder(sentnece2,en_output,mask2)
-            if(de_output[-1]==self.config["end_word"]):
+            if(de_output[:,-1]==self.config["end_word"]):
                 return sentnece2
-            sentnece2=torch.cat([sentnece2,de_output[-1]],dim=0)
+            sentnece2=torch.cat([sentnece2,de_output[:,-1]],dim=1)
+        return sentnece2

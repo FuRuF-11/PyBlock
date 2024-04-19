@@ -26,7 +26,7 @@ def sourceMask(src1,src2=None):
         # src: [batch,sentence]-->2*.unqueeze(1)-->src_mask: [batch,1,1,sentence]
         
         if(src2==None):
-             src2=src1
+            src2=src1
         src1=(src1.sum(dim=2)==0)
         src2=(src2.sum(dim=2)==0)
         batch_size, len_q = src1.size()
