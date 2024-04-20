@@ -32,19 +32,22 @@ class Transformer(nn.Module):
         return de_output
     
     @torch.no_grad()
-    def generate(self,sentnece1,sentnece2,max_length=100):
+    def generate(self,sentnece1,sentnece2):
         '''
         we need two different sentences to run the transformr
         and the second sentnece need to be finished 
         '''
+        s2l=sentnece2.size(0)
+        sentnece2=F.pad(sentnece2,(0,0,0,self.config["trg_length"]-s2l),value=0)
         sentnece1=sentnece1.view(1,sentnece1.size(0),sentnece1.size(1))
         sentnece2=sentnece2.view(1,sentnece2.size(0),sentnece2.size(1))
+
         mask1=sourceMask(src1=sentnece1)
         en_output=self.encoder(sentnece1,mask1)
-        for _ in range(max_length):
-            mask2=sourceMask(src1=sentnece1,src2=sentnece2)
+        for i in range(self.config["trg_length"]-s2l):
+            mask2=sourceMask(src1=sentnece2,src2=sentnece1)
             de_output=self.decoder(sentnece2,en_output,mask2)
-            if(de_output[:,-1]==self.config["end_word"]):
+            if(torch.sum(de_output[:,-1]==self.config["end_word"])):
                 return sentnece2
-            sentnece2=torch.cat([sentnece2,de_output[:,-1]],dim=1)
+            sentnece2[0,s2l+i]=de_output[:,-1]
         return sentnece2
