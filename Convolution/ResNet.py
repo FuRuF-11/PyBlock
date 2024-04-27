@@ -15,7 +15,7 @@ class ResNet(nn.Module):
         self.hidden_channel=hidden_channel
         self.output_size=output_size
         self.layers=layers
-
+    
 
     def forward(self,X):
         return
