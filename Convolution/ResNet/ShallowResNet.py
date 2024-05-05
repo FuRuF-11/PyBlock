@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import copy
 import math
 
 # 网络参数设置
@@ -26,30 +27,31 @@ import math
     average pool: 1000-d fc, softmax
 }
 '''
-def copyblock():
-    return 
+def cloneLayers(layer,n):
+    return nn.ModuleList([copy.deepcopy(layer) for _ in range(n)])
 
-
-class ConvBlock(nn.Module):
+class Block(nn.Module):
     def __init__(self,in_channel,out_channel,kernel_size) -> None:
         super().__init__()
-        
-        self.block1=nn.Sequential(
+        self.block=nn.Sequential(
                     nn.Conv2d(in_channels=in_channel,out_channels=out_channel,kernel_size=kernel_size),
                     nn.ReLU(),
                     nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
                     nn.ReLU(),
                     nn.BatchNorm2d()
                 )
-        self.block2=nn.Sequential(
-                        nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
-                        nn.ReLU(),
-                        nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
-                        nn.ReLU(),
-                        nn.BatchNorm2d()
-                    )
+    def forward(self,X):
+        return self.block(X)
+
+class ConvBlock(nn.Module):
+    def __init__(self,in_channel,out_channel,kernel_size,block_num) -> None:
+        super().__init__()
+        self.block_num=block_num
+        self.block1=Block(in_channel,out_channel,kernel_size)
+        self.blocks=cloneLayers(Block(out_channel,out_channel,kernel_size),self.block_num-1)
             
-    def forward(self):
+    def forward(self,X):
+        
         return 
 
 class ResNet18(nn.Module):
@@ -61,34 +63,7 @@ class ResNet18(nn.Module):
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=3,stride=2)
         )
-        self.conv2_1=nn.Sequential(
-            nn.Conv2d(in_channels=64,out_channels=64,kernel_size=3),
-            nn.ReLU(),
-            nn.Conv2d(in_channels=64,out_channels=64,kernel_size=3),
-            nn.ReLU(),
-            nn.BatchNorm2d()
-        )
-        self.conv2_2=nn.Sequential(
-            nn.Conv2d(in_channels=64,out_channels=64,kernel_size=3),
-            nn.ReLU(),
-            nn.Conv2d(in_channels=64,out_channels=64,kernel_size=3),
-            nn.ReLU(),
-            nn.BatchNorm2d()
-        )
-        self.conv3_1=nn.Sequential(
-            nn.Conv2d(in_channels=64,out_channels=128,kernel_size=3),
-            nn.ReLU(),
-            nn.Conv2d(in_channels=128,out_channels=128,kernel_size=3),
-            nn.ReLU(),
-            nn.BatchNorm2d()
-        )
-        self.conv3_2=nn.Sequential(
-            nn.Conv2d(in_channels=128,out_channels=128,kernel_size=3),
-            nn.ReLU(),
-            nn.Conv2d(in_channels=128,out_channels=128,kernel_size=3),
-            nn.ReLU(),
-            nn.BatchNorm2d()
-        )
+        
 
     def forward(self,X):
         return
