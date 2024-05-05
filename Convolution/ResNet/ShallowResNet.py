@@ -26,30 +26,29 @@ import math
     average pool: 1000-d fc, softmax
 }
 '''
-
+def copyblock():
+    return 
 
 
 class ConvBlock(nn.Module):
-    def __init__(self,in_channel,out_channel,kernel_size,layer_num=2) -> None:
+    def __init__(self,in_channel,out_channel,kernel_size) -> None:
         super().__init__()
-        self.layer_num=layer_num
-        if(layer_num==2):
-            self.block1=nn.Sequential(
+        
+        self.block1=nn.Sequential(
                     nn.Conv2d(in_channels=in_channel,out_channels=out_channel,kernel_size=kernel_size),
                     nn.ReLU(),
                     nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
                     nn.ReLU(),
                     nn.BatchNorm2d()
                 )
-            self.block2=nn.Sequential(
-                    nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
-                    nn.ReLU(),
-                    nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
-                    nn.ReLU(),
-                    nn.BatchNorm2d()
-                )
-        elif(layer_num==3):
-            pass
+        self.block2=nn.Sequential(
+                        nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
+                        nn.ReLU(),
+                        nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
+                        nn.ReLU(),
+                        nn.BatchNorm2d()
+                    )
+            
     def forward(self):
         return 
 
