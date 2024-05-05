@@ -52,6 +52,17 @@ import math
 }
 '''
 
+
+class Block(nn.Module):
+    def __init__(self,in_channel,out_channel,kernel_size,layer_num=2) -> None:
+        super().__init__()
+        if(layer_num==2):
+            pass
+        elif(layer_num==3):
+            pass
+    def forward(self):
+        return 
+
 class ResNet18(nn.Module):
     def __init__(self,output_size,in_channel):
         super().__init__()
@@ -66,6 +77,28 @@ class ResNet18(nn.Module):
             nn.ReLU(),
             nn.Conv2d(in_channels=64,out_channels=64,kernel_size=3),
             nn.ReLU(),
+            nn.BatchNorm2d()
+        )
+        self.conv2_2=nn.Sequential(
+            nn.Conv2d(in_channels=64,out_channels=64,kernel_size=3),
+            nn.ReLU(),
+            nn.Conv2d(in_channels=64,out_channels=64,kernel_size=3),
+            nn.ReLU(),
+            nn.BatchNorm2d()
+        )
+        self.conv3_1=nn.Sequential(
+            nn.Conv2d(in_channels=64,out_channels=128,kernel_size=3),
+            nn.ReLU(),
+            nn.Conv2d(in_channels=128,out_channels=128,kernel_size=3),
+            nn.ReLU(),
+            nn.BatchNorm2d()
+        )
+        self.conv3_2=nn.Sequential(
+            nn.Conv2d(in_channels=128,out_channels=128,kernel_size=3),
+            nn.ReLU(),
+            nn.Conv2d(in_channels=128,out_channels=128,kernel_size=3),
+            nn.ReLU(),
+            nn.BatchNorm2d()
         )
 
     def forward(self,X):
