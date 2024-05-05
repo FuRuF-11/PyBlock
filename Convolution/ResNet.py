@@ -53,11 +53,25 @@ import math
 '''
 
 
-class Block(nn.Module):
+class ConvBlock(nn.Module):
     def __init__(self,in_channel,out_channel,kernel_size,layer_num=2) -> None:
         super().__init__()
+        self.layer_num=layer_num
         if(layer_num==2):
-            pass
+            self.block1=nn.Sequential(
+                    nn.Conv2d(in_channels=in_channel,out_channels=out_channel,kernel_size=kernel_size),
+                    nn.ReLU(),
+                    nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
+                    nn.ReLU(),
+                    nn.BatchNorm2d()
+                )
+            self.block2=nn.Sequential(
+                    nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
+                    nn.ReLU(),
+                    nn.Conv2d(in_channels=out_channel,out_channels=out_channel,kernel_size=kernel_size),
+                    nn.ReLU(),
+                    nn.BatchNorm2d()
+                )
         elif(layer_num==3):
             pass
     def forward(self):
