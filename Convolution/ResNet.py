@@ -52,21 +52,19 @@ import math
 }
 '''
 
-
-
 class ResNet18(nn.Module):
     def __init__(self,output_size,in_channel):
         super().__init__()
         self.output_size=output_size
-        self.conv0=nn.Sequential(
+        self.conv1=nn.Sequential(
             nn.Conv2d(in_channels=in_channel,out_channels=64,kernel_size=7,stride=2),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=3,stride=2)
         )
-        self.conv2=nn.Sequential(
-            nn.Conv2d(),
+        self.conv2_1=nn.Sequential(
+            nn.Conv2d(in_channels=64,out_channels=64,kernel_size=3),
             nn.ReLU(),
-            nn.Conv2d(),
+            nn.Conv2d(in_channels=64,out_channels=64,kernel_size=3),
             nn.ReLU(),
         )
 
