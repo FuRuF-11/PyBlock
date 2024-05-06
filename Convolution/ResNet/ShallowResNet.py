@@ -65,7 +65,12 @@ class ResNet18(nn.Module):
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=3,stride=2)
         )
-        
-
+        self.conv2=ConvBlock(64,64,3,2)
+        self.conv3=ConvBlock(64,128,3,2)
+        self.conv4=ConvBlock(128,256,3,2)
+        self.conv5=ConvBlock(256,512,3,2)
+        self.avepool=nn.Sequential(
+            nn.AvgPool2d()
+        )
     def forward(self,X):
         return
