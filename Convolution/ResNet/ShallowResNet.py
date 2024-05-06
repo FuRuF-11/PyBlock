@@ -51,8 +51,10 @@ class ConvBlock(nn.Module):
         self.blocks=cloneLayers(Block(out_channel,out_channel,kernel_size),self.block_num-1)
             
     def forward(self,X):
-        
-        return 
+        X=X+self.block1(X)
+        for i in range(self.block_num-1):
+            X=X+self.blocks[i](X)
+        return X
 
 class ResNet18(nn.Module):
     def __init__(self,output_size,in_channel):
