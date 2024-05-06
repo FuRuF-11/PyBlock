@@ -31,7 +31,7 @@ def cloneLayers(layer,n):
     return nn.ModuleList([copy.deepcopy(layer) for _ in range(n)])
 
 class Block(nn.Module):
-    def __init__(self,in_channel,out_channel,kernel_size) -> None:
+    def __init__(self,in_channel,out_channel,kernel_size,stride) -> None:
         super().__init__()
         self.block=nn.Sequential(
                     nn.Conv2d(in_channels=in_channel,out_channels=out_channel,kernel_size=kernel_size),
@@ -44,10 +44,10 @@ class Block(nn.Module):
         return self.block(X)
 
 class ConvBlock(nn.Module):
-    def __init__(self,in_channel,out_channel,kernel_size,block_num) -> None:
+    def __init__(self,in_channel,out_channel,kernel_size,block_num,stride=1) -> None:
         super().__init__()
         self.block_num=block_num
-        self.block1=Block(in_channel,out_channel,kernel_size)
+        self.block1=Block(in_channel,out_channel,kernel_size,stride=stride)
         self.blocks=cloneLayers(Block(out_channel,out_channel,kernel_size),self.block_num-1)
             
     def forward(self,X):
@@ -66,11 +66,12 @@ class ResNet18(nn.Module):
             nn.MaxPool2d(kernel_size=3,stride=2)
         )
         self.conv2=ConvBlock(64,64,3,2)
-        self.conv3=ConvBlock(64,128,3,2)
-        self.conv4=ConvBlock(128,256,3,2)
-        self.conv5=ConvBlock(256,512,3,2)
+        self.conv3=ConvBlock(64,128,3,2,stride=2)
+        self.conv4=ConvBlock(128,256,3,2,stride=2)
+        self.conv5=ConvBlock(256,512,3,2,stride=2)
         self.avepool=nn.Sequential(
-            nn.AvgPool2d()
+            nn.AdaptiveAvgPool2d(),
+            nn.Linear()
         )
     def forward(self,X):
         return
