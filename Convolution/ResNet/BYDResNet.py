@@ -70,7 +70,7 @@ class ResNet18(nn.Module):
         self.conv4=ConvBlock(128,256,3,2,stride=2)
         self.conv5=ConvBlock(256,512,3,2,stride=2)
         self.avepool=nn.Sequential(
-            nn.AdaptiveAvgPool2d(),
+            nn.AdaptiveAvgPool2d((1,1)),
             nn.Linear()
         )
     def forward(self,X):
