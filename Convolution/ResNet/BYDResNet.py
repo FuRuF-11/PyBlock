@@ -4,29 +4,6 @@ import torch.nn.functional as F
 import copy
 import math
 
-# 网络参数设置
-'''
-18 {
-    conv1: 7x7 64 stride 2,
-           3x3 maxpool stride 2,
-    conv2: [3x3 64, 3x3 64]x2,
-    conv3: [3x3 128, 3x3 128]x2,
-    conv4: [3x3 256, 3x3 256]x2,
-    conv5: [3x3 512, 3x3 512]x2,
-    average pool: 1000-d fc, softmax
-}
-'''
-'''
-34 {
-    conv1: 7x7 64 stride 2,
-           3x3 maxpool stride 2,
-    conv2: [3x3 64, 3x3 64]x3,
-    conv3: [3x3 128, 3x3 128]x4,
-    conv4: [3x3 256, 3x3 256]x6,
-    conv5: [3x3 512, 3x3 512]x3,
-    average pool: 1000-d fc, softmax
-}
-'''
 def cloneLayers(layer,n):
     return nn.ModuleList([copy.deepcopy(layer) for _ in range(n)])
 
