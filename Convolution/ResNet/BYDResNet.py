@@ -15,7 +15,7 @@ def conv3x3(in_planes, out_planes, stride=1):
                      padding=1, bias=False)
 
 def alpha(length:list):
-    # 使用list作为输入 
+    # 使用list作为输入确定每个层需要的常数 
     return 
     
 
