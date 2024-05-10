@@ -5,9 +5,6 @@ import copy
 import math
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
-'''
-需要加入残差参数
-'''
 
 def conv3x3(in_planes, out_planes, stride=1):
     """3x3 convolution with padding"""
@@ -15,7 +12,8 @@ def conv3x3(in_planes, out_planes, stride=1):
                      padding=1, bias=False)
 
 def alpha(length:list):
-    # 使用list作为输入确定每个层需要的常数 
+    # 使用list作为输入确定每个层需要的常数
+    # 1+a/n 
     return 
     
 
