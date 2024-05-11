@@ -11,8 +11,8 @@ def conv3x3(in_planes, out_planes, stride=1):
     return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
                      padding=1, bias=False)
 
-def alpha(length:list):
-    # 使用list作为输入确定每个层需要的常数
+def alpha(length:list) -> list:
+    # 使用list作为输入确定每个层需要的常数  
     # 1+a/n 
     return 
     
@@ -92,6 +92,9 @@ class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes=1000):
         self.inplanes = 64
         super(ResNet, self).__init__()
+
+
+        self.alpha=alpha(layers)
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
                                bias=False)
         self.bn1 = nn.BatchNorm2d(64)
@@ -151,6 +154,7 @@ def resnet18(pretrained=False, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
     model = ResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
+
     return model
  
  
