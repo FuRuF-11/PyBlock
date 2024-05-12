@@ -31,3 +31,10 @@ class MLP(nn.Module):
     def forward(self,X):
         X=self.MLP(X)
         return X
+    
+class switchGLU(nn.Module):
+    def __init__(self,in_feature,hidden_size,dropout=0.1) -> None:
+        super().__init__()
+        
+    def forward(self,X):
+        return 
