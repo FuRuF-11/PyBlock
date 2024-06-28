@@ -34,6 +34,10 @@ def sourceMask(src1,src2=None):
         pad_attn_mask = src2.data.eq(0).unsqueeze(1).float()  # [batch_size, 1, len_k], True is masked
         return pad_attn_mask.expand(batch_size, len_q, len_k)
 
+def SparseAttention(q,k,v,mask=None,dropout=None):
+    return 
+
+
 def attention(q,k,v,mask=None,dropout=None):
     '''
     compute attention score 
