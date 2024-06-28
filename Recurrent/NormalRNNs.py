@@ -126,4 +126,3 @@ class LSTM(nn.Module):
             c0=torch.zeros(self.layer,self.hidden_size)
         X,(hn,cn)=self.rnn(X,(h0,c0))
         return X
-    
